@@ -12,4 +12,4 @@ Tools
     - Introdutory concepts
   
 - ## Statistical Inferential Analysis
-    - Hypothesis Testing
+    - [Hypothesis Testing](https://github.com/matheuscamposmt/portfolio/blob/main/Statistical%20Inference%20Analysis/NBA/hypothesis_testing.ipynb)
