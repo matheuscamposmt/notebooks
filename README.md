@@ -8,8 +8,11 @@ Tools
 - Machine Learning: scikit-learn
 
 ## Contents
-- ## Probability
+- ### Probability
     - Introdutory concepts
   
-- ## Statistical Inferential Analysis
+- ### Statistical Inferential Analysis
     - [Hypothesis Testing](https://github.com/matheuscamposmt/portfolio/blob/main/Statistical%20Inference%20Analysis/NBA/hypothesis_testing.ipynb)
+
+- ### Machine Learning
+    - [Linear Regression](https://github.com/matheuscamposmt/portfolio/blob/main/Machine%20Learning/linear_regression.ipynb/)
