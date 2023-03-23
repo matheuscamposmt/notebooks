@@ -1,17 +1,49 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import pickle
 
 st.title("California Housing Prices Prediction")
 
-st.sidebar.header("Enter the details of your property")
+data = pd.read_csv('housing.csv')
 
-housing_median_age = st.sidebar.slider("Median Age of the House (in years)", 1, 100, 50)
-total_rooms = st.sidebar.slider("Total Rooms in the House", 1, 10000, 5000)
-total_bedrooms = st.sidebar.slider("Total Bedrooms in the House", 1, 10000, 5000)
-population = st.sidebar.slider("Population of the Locality", 1, 100000, 50000)
-households = st.sidebar.slider("Number of Households in the Locality", 1, 100000, 50000)
-median_income = st.sidebar.slider("Median Income of the Locality (in USD)", 1000, 200000, 50000)
+max_values = data.select_dtypes(include=np.number).max()
+min_values = data.select_dtypes(include=np.number).min()
+
+print(max_values)
+
+with st.container() as container:
+    st.header("Enter the attributes of the housing.")
+
+    housing_median_age = st.number_input(
+        "Median Age (in years)",
+        min_value=int(min_values['housing_median_age']), 
+        max_value=int(max_values['housing_median_age']), 
+        step=1)
+    total_rooms = st.number_input(
+        "Total Rooms", 
+        min_value=int(min_values['total_rooms']), 
+        max_value=int(max_values['total_rooms']), 
+        step=5)
+    total_bedrooms = st.number_input(
+        "Total Bedrooms", 
+        min_value=int(min_values['total_bedrooms']), 
+        max_value=int(max_values['total_bedrooms']), 
+        step=5)
+    
+    population = st.number_input(
+        "Population of the Locality", 
+        min_value=int(min_values['population']), 
+        max_value=int(max_values['population']), step=5)
+    households = st.number_input(
+        "Number of Households in the Locality", 
+        min_value=int(min_values['households']), 
+        max_value=int(max_values['households']), step=5)
+    
+    median_income = st.number_input(
+        "Median Income of the Locality", 
+        min_value=min_values['median_income'], 
+        max_value=max_values['median_income'], step=0.5)
 
 input_data = {"housing_median_age": housing_median_age,
               "total_rooms": total_rooms,
