@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+from combiner import CombinedAttributesAdder
 
 st.title("California Housing Prices Prediction")
 
@@ -44,18 +45,25 @@ with st.container() as container:
         "Median Income of the Locality", 
         min_value=min_values['median_income'], 
         max_value=max_values['median_income'], step=0.5)
+    
+    ocean_proximity = st.selectbox(
+    'Ocean Proximity:',
+    ('NEAR BAY', '<1H OCEAN', 'INLAND', 'NEAR OCEAN', 'ISLAND'))
 
 input_data = {"housing_median_age": housing_median_age,
               "total_rooms": total_rooms,
               "total_bedrooms": total_bedrooms,
               "population": population,
               "households": households,
-              "median_income": median_income}
+              "median_income": median_income,
+              "ocean_proximity": ocean_proximity}
 
 input_df = pd.DataFrame([input_data])
 
+input_df['lon'] = np.zeros(len(input_df))
+input_df['lat'] = np.zeros(len(input_df))
+
 loaded_model = pickle.load(open('reg.sav', 'rb'))
 
-prediction = loaded_model.predict(input_df)
-
+prediction = loaded_model.predict(input_df).squeeze()
 st.write(f"Prediction: {prediction:.2f}")
