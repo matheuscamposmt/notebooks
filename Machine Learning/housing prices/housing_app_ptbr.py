@@ -1,5 +1,5 @@
 import streamlit as st
-st.set_page_config(page_title="Housing Prices Prediction", page_icon=":house:")
+st.set_page_config(page_title="Predição de Preços de Imóveis", page_icon=":house:")
 import pandas as pd
 import numpy as np
 import pickle
@@ -19,7 +19,7 @@ def _max_width_(prcnt_width:int = 70):
                 unsafe_allow_html=True,
     )
 _max_width_(70)
-st.title("California Housing Prices Prediction")
+st.title("Predição de Preços de Imóveis na Califórnia")
 st.title("")
 st.title("")
 
@@ -46,11 +46,11 @@ def clear_markers():
     st.session_state['markers'] = []
 
 def create_map():
-    # Define the boundaries of California
+    # Define as coordenadas da Califórnia
     min_lat, min_lon = 32.5295, -124.4820
     max_lat, max_lon = 42.0095, -114.1315
 
-    # Create a map centered on California
+    # Cria um mapa centralizado na Califórnia
     map_ca = folium.Map(location=[37.7749, -122.4194], zoom_start=6, min_lat=min_lat, min_lon=min_lon, max_lat=max_lat, max_lon=max_lon, no_wrap=True, max_bounds=True)
 
     return map_ca
@@ -79,44 +79,44 @@ geolocator = initialize_nominatim()
 
 col1, col2 = st.columns([1, 2], gap='large')
 with col1:
-    st.header("Enter the attributes of the housing.")
+    st.header("Digite os atributos do imóvel.")
     subcol1, subcol2 = st.columns(2)
 
     with subcol1:
         housing_median_age = st.number_input(
-            "Median Age (in years)",
+            "Mediana de idade (em anos)",
             min_value=int(min_values['housing_median_age']), 
             max_value=int(max_values['housing_median_age']), 
             step=1)
         total_rooms = st.number_input(
-            "Total Rooms", 
+            "Total de quartos", 
             min_value=int(min_values['total_rooms']), 
             max_value=int(max_values['total_rooms']), 
             step=5)
         total_bedrooms = st.number_input(
-            "Total Bedrooms", 
+            "Total de quartos de dormir", 
             min_value=int(min_values['total_bedrooms']), 
             max_value=int(max_values['total_bedrooms']), 
             step=5)
         
         population = st.number_input(
-            "Population of the Locality", 
+            "População da localidade", 
             min_value=int(min_values['population']), 
             max_value=int(max_values['population']), step=5)
 
     with subcol2:
         households = st.number_input(
-            "Number of Households in the Locality", 
+            "Número de lares na localidade", 
             min_value=int(min_values['households']), 
             max_value=int(max_values['households']), step=5)
         
         median_income = st.slider(
-            "Median Income of the Locality", 
+            "Renda mediana da localidade", 
             min_value=float(min_values['median_income']), 
             max_value=float(max_values['median_income']), step=0.5)
         
         ocean_proximity = st.selectbox(
-        'Ocean Proximity:',
+        'Proximidade com o mar:',
         ('NEAR BAY', '<1H OCEAN', 'INLAND', 'NEAR OCEAN', 'ISLAND'))
 
     address = st.text_input("Address")
@@ -140,14 +140,14 @@ with col1:
                 st.session_state['markers'].append(marker)
 
             else:
-                st.warning("The location should be in California. Inputting a place that doesn't belong to the state of California will lead to incosistent results.")
+                st.warning("O local deve ser na Califórnia. Inserir um local que não pertença ao estado da Califórnia levará a resultados inconsistentes.")
         
         else:
-            st.error("Address not found.")
+            st.error("Endereço não encontrado.")
 
 
 
-    button = st.button("Predict", use_container_width=True)
+    button = st.button("Calcular a predição", use_container_width=True)
 
     if button:
         location = st.session_state['location']
@@ -168,7 +168,7 @@ with col1:
         st.session_state['prediction'] = prediction
     
     if st.session_state['prediction']:
-        st.metric(label="Median House Value", value=f"$ {st.session_state['prediction']:.2f}")
+        st.metric(label="Valor mediano da casa", value=f"$ {st.session_state['prediction']:.2f}")
 
 
 with col2:
