@@ -3,19 +3,58 @@ import pandas as pd
 import numpy as np
 import pickle
 from combiner import CombinedAttributesAdder
+import folium
+from geopy.geocoders import Nominatim
+from streamlit_folium import st_folium
 
 st.title("California Housing Prices Prediction")
+st.header("Enter the attributes of the housing.")
 
 data = pd.read_csv('housing.csv')
 
 max_values = data.select_dtypes(include=np.number).max()
 min_values = data.select_dtypes(include=np.number).min()
 
-print(max_values)
+@st.cache_resource
+def load_model(filepath: str):
+    return pickle.load(open(filepath, 'rb'))
 
-with st.container() as container:
-    st.header("Enter the attributes of the housing.")
+loaded_model = load_model('reg.sav')
 
+def get_coords(address: str, geolocator):
+    return geolocator.geocode(address)
+
+def create_marker(m: folium.Map, coords, address=None):
+    location = [coords.latitude, coords.longitude]
+    marker = folium.Marker(location=location, popup=address, icon=folium.Icon(color='red'))
+    return marker
+
+def clear_markers():
+    st.session_state['markers'] = []
+
+def create_map():
+    # Define the boundaries of California
+    min_lat, min_lon = 32.5295, -124.4820
+    max_lat, max_lon = 42.0095, -114.1315
+
+    # Create a map centered on California
+    map_ca = folium.Map(location=[37.7749, -122.4194], zoom_start=6, min_lat=min_lat, min_lon=min_lon, max_lat=max_lat, max_lon=max_lon, no_wrap=True, max_bounds=True)
+
+    return map_ca
+
+if 'markers' not in st.session_state:
+    st.session_state['markers'] = []
+
+map_ca = create_map()
+fg = folium.FeatureGroup(name="markers")
+
+for marker in st.session_state["markers"]:
+    fg.add_child(marker)
+
+geolocator = Nominatim(user_agent="app")
+col1, col2 = st.columns(2)
+
+with col1:
     housing_median_age = st.number_input(
         "Median Age (in years)",
         min_value=int(min_values['housing_median_age']), 
@@ -36,6 +75,8 @@ with st.container() as container:
         "Population of the Locality", 
         min_value=int(min_values['population']), 
         max_value=int(max_values['population']), step=5)
+
+with col2:
     households = st.number_input(
         "Number of Households in the Locality", 
         min_value=int(min_values['households']), 
@@ -50,20 +91,42 @@ with st.container() as container:
     'Ocean Proximity:',
     ('NEAR BAY', '<1H OCEAN', 'INLAND', 'NEAR OCEAN', 'ISLAND'))
 
-input_data = {"housing_median_age": housing_median_age,
-              "total_rooms": total_rooms,
-              "total_bedrooms": total_bedrooms,
-              "population": population,
-              "households": households,
-              "median_income": median_income,
-              "ocean_proximity": ocean_proximity}
+address = st.text_input("Address")
+st.caption("Press enter to mark the address in the map.")
 
-input_df = pd.DataFrame([input_data])
+button = st.button("Predict")
+if address:
+    coords = get_coords(address, geolocator)
+    loc = np.array([coords.longitude, coords.latitude])
 
-input_df['lon'] = np.zeros(len(input_df))
-input_df['lat'] = np.zeros(len(input_df))
+    
+    c1, c2 = st.columns(2)
+    with c1:
+        st.metric(label="Latitude", value=f"{coords.latitude:.2f}")
+    with c2:
+        st.metric(label="Longitude", value=f"{coords.longitude:.2f}")
+    
+    marker = create_marker(map_ca, coords, address=address)
+    st.session_state['markers'].append(marker)
 
-loaded_model = pickle.load(open('reg.sav', 'rb'))
+if button:
+    input_data = {
+    "lon": coords.longitude,
+    "lat": coords.latitude,
+    "housing_median_age": housing_median_age,
+    "total_rooms": total_rooms,
+    "total_bedrooms": total_bedrooms,
+    "population": population,
+    "households": households,
+    "median_income": median_income,
+    "ocean_proximity": ocean_proximity
+    }
 
-prediction = loaded_model.predict(input_df).squeeze()
-st.write(f"Prediction: {prediction:.2f}")
+    input_df = pd.DataFrame([input_data])
+    prediction = loaded_model.predict(input_df).squeeze()
+    st.metric(label="Prediction", value=f"$ {prediction:.2f}")
+
+# Add the map to st_data
+st_data = st_folium(map_ca, width=800, feature_group_to_add=fg)
+
+st.button("Clear markers")
