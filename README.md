@@ -16,3 +16,5 @@ Tools
 
 - ### Machine Learning
     - [Linear Regression](https://github.com/matheuscamposmt/portfolio/blob/main/Machine%20Learning/linear_regression.ipynb/)
+
+    - [California Housing Prices Prediction App]
