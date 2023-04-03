@@ -1,15 +1,15 @@
-# Data Science Portfolio
+# Portfolio
 
 Repository containing data science projects for academic, self learning, and professional purposes. Presented in the form of Jupyter Notebooks.
 
-Tools
+### Tools
 
 - Python: NumPy, Pandas, Seaborn, Matplotlib
 - Machine Learning: scikit-learn
 
 ## Contents
 - ### Probability
-    - Introdutory concepts
+    - [Introdutory concepts](https://github.com/matheuscamposmt/portfolio/tree/main/Probability)
   
 - ### Statistical Inferential Analysis
     - [Hypothesis Testing](https://github.com/matheuscamposmt/portfolio/blob/main/Statistical%20Inference%20Analysis/NBA/hypothesis_testing.ipynb)
