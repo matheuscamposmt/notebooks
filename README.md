@@ -1,4 +1,4 @@
-# Portfolio
+# Data Science Jupyter Notebooks
 
 Repository containing data science projects for academic, self learning, and professional purposes. Presented in the form of Jupyter Notebooks.
 
