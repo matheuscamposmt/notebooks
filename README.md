@@ -16,4 +16,4 @@ Repository containing data science projects for academic, self learning, and pro
 
 - ### Machine Learning
     - [Linear Regression](https://github.com/matheuscamposmt/portfolio/blob/main/Machine%20Learning/linear_regression.ipynb/)
-    - [Housing Prices Prediction App](https://housing-prices-prediction.streamlit.app/)
+    - [Housing Prices Prediction App](https://github.com/matheuscamposmt/housing_prices_app)
